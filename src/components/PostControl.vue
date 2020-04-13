@@ -66,7 +66,7 @@ export default {
   methods: {
     deletePosts() {
       axios
-        .get("http://localhost:3000/delete")
+        .post("http://localhost:3000/delete/published")
         .then(res => {
           const msg = res.data;
           this.deletePostsRes = msg;
@@ -85,7 +85,7 @@ export default {
     },
     deleteDrafts() {
       axios
-        .get("http://localhost:3000/drafts")
+        .post("http://localhost:3000/delete/drafts")
         .then(res => {
           this.deleteDraftsRes = res.data;
         })
