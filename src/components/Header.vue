@@ -1,10 +1,17 @@
 <template>
   <section class="hero flex justify-center items-center">
-    <div class="container flex justify-center flex-col px-20 m-8">
-      <h1 class="text-3xl font-bold text-white">
-        <a href="https://imkant.com">Kant Bot</a>
-      </h1>
-      <h2 class="text-xl text-white">This is gonna be transcendental 🤯</h2>
+    <div class="container flex items-center px-20 m-8">
+      <div class="img__container mr-6 flex items-center">
+        <img src="./img/kantbot.png" alt="" />
+      </div>
+      <div class="flex flex-col justify-center">
+        <h1 class="text-5xl font-bold text-white leading-none">
+          <a href="https://imkant.com">Kant Bot</a>
+        </h1>
+        <h2 class="text-xl text-white leading-none mt-2">
+          This is gonna be transcendental 🤯
+        </h2>
+      </div>
     </div>
   </section>
 </template>
@@ -16,13 +23,10 @@ export default {};
 <style scoped>
 .hero {
   height: 20rem;
-  background-image: linear-gradient(
-    to bottom,
-    #00071a,
-    #112f45,
-    #115773,
-    #00849e,
-    #00b3c2
-  );
+}
+
+.img__container {
+  height: 8rem;
+  width: 8rem;
 }
 </style>

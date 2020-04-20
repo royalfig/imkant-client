@@ -4,7 +4,7 @@
       <h2 class="text-xl font-bold mb-2 text-gray-700">
         Journals
         <span class="bg-green-300 rounded-lg text-xs p-1"
-          >{{ totalPosts }} Posts</span
+          >{{ $store.state.totalPosts }} Posts</span
         >
       </h2>
       <div class="flex flex-wrap">
@@ -53,13 +53,16 @@ export default {
         "The Philosophical Inquiry"
       ],
       response: "",
-      totalPosts: "",
+      totalPosts: 0,
       postCount: {}
     };
   },
   mounted() {
     axios.get("http://localhost:3000/all-posts/").then(({ data }) => {
       const totalPosts = data.meta.pagination.total;
+      console.log(totalPosts);
+      this.$store.commit("updateTotalPosts", totalPosts);
+      // this.store.state.totalPosts = data.meta.pagination.total;
 
       /* Tag Logic
       Populate array with tag names 

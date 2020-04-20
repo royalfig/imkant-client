@@ -1,7 +1,9 @@
 <template>
   <section class="hero flex justify-center items-center">
     <div class="container flex justify-center flex-col px-20 m-8">
-      <h2 class="text-xl font-bold mb-2 text-gray-700">Post Control</h2>
+      <h2 class="text-xl font-bold mb-2 text-gray-700">
+        Post Control {{ $store.state.totalPosts }}
+      </h2>
       <div class="flex">
         <button
           class="border border-blue-300 bg-blue-100 rounded-full py-2 px-4 mr-2 hover:border-blue-700"
