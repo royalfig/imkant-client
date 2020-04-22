@@ -12,5 +12,10 @@ export default {
 
   getAuthors() {},
 
-  getSources() {}
+  async getSources() {
+    const { data } = await axios
+      .get("http://localhost:3000/sources/")
+      .catch(err => console.log(err));
+    return data;
+  }
 };

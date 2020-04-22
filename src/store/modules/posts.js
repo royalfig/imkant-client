@@ -1,28 +1,26 @@
 import posts from "../../api/getData";
-import formatDate from "../../utils/date";
+import { formatDate, filterMatchesByMonth } from "../../utils/date";
+import paginate from "../../utils/util";
 
 const state = {
   posts: [],
   total: 0,
   firstPost: {},
   secondAndThirdPosts: [],
-  authorArr: []
+  authorArr: [],
+  sources: [],
+  sourceNum: 0
 };
 
 const getters = {
   thisMonth: state => {
-    return state.posts.filter(item => {
-      const postDate = new Date(item.published_at);
-      const postMonth = postDate.getMonth();
-      const postYear = postDate.getFullYear();
-      const now = new Date();
-      const month = now.getMonth();
-      const year = now.getFullYear();
-      if (postMonth === month && postYear === year) {
-        return true;
-      }
-      return false;
-    }).length;
+    return filterMatchesByMonth(state.posts, "current").length;
+  },
+  lastMonth: state => {
+    return filterMatchesByMonth(state.posts, "last").length;
+  },
+  pages: state => {
+    return paginate(state.posts);
   }
 };
 
@@ -32,6 +30,11 @@ const actions = {
     commit("setData", data);
     commit("setAuthor", data);
     commit("setFirstPosts", data);
+  },
+  async getSources({ commit }) {
+    const data = await posts.getSources();
+    commit("setSources", data);
+    commit("setSourceNum", data);
   }
 };
 
@@ -90,6 +93,14 @@ const mutations = {
     }
     state.firstPost = firstPosts.shift();
     state.secondAndThirdPosts = firstPosts;
+  },
+
+  setSources(state, data) {
+    state.sources = data;
+  },
+
+  setSourceNum(state, data) {
+    state.sourceNum = data.length;
   }
 };
 

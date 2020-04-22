@@ -3,7 +3,7 @@
     <kb-header />
     <kb-dashboard />
     <!-- <get-and-post-content /> -->
-    <!-- <post-control /> -->
+    <post-control />
   </div>
 </template>
 
@@ -11,15 +11,15 @@
 import Header from "./components/Header.vue";
 import Dashboard from "./components/Dashboard";
 // import GetAndPostContent from "./components/GetAndPostContent";
-// import PostControl from "./components/PostControl.vue";
+import PostControl from "./components/PostControl.vue";
 
 export default {
   name: "App",
   components: {
     "kb-header": Header,
-    "kb-dashboard": Dashboard
+    "kb-dashboard": Dashboard,
     // GetAndPostContent,
-    // PostControl
+    PostControl
   }
 };
 </script>
@@ -35,5 +35,7 @@ export default {
     #00849e,
     #00b3c2
   );
+  font-family: -apple-system, BlinkMacSystemFont, Roboto, "Segoe UI", Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 </style>
