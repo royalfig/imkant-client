@@ -1,7 +1,7 @@
 <template>
-  <section class="hero flex justify-center items-center">
-    <div class="container flex items-center px-20 m-8">
-      <div class="img__container mr-6 flex items-center">
+  <section class="h-64 flex items-center">
+    <div class="flex items-center px-20 m-8">
+      <div class="h-32 w-32 mr-6 flex items-center">
         <img src="./img/kantbot.png" alt="" />
       </div>
       <div class="flex flex-col justify-center">
@@ -20,13 +20,4 @@
 export default {};
 </script>
 
-<style scoped>
-.hero {
-  height: 20rem;
-}
-
-.img__container {
-  height: 8rem;
-  width: 8rem;
-}
-</style>
+<style scoped></style>

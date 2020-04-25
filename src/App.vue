@@ -1,25 +1,28 @@
 <template>
   <div class="font-sans text-base" id="app">
+    <nav-bar />
     <kb-header />
-    <kb-dashboard />
-    <!-- <get-and-post-content /> -->
-    <post-control />
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
+import NavBar from "./components/NavBar";
 import Header from "./components/Header.vue";
-import Dashboard from "./components/Dashboard";
-// import GetAndPostContent from "./components/GetAndPostContent";
-import PostControl from "./components/PostControl.vue";
+// import Dashboard from "./components/Dashboard";
+// // import GetAndPostContent from "./components/GetAndPostContent";
+// import PostControl from "./components/PostControl.vue";
+// import PostQuery from "./components/PostQuery.vue";
 
 export default {
   name: "App",
   components: {
-    "kb-header": Header,
-    "kb-dashboard": Dashboard,
-    // GetAndPostContent,
-    PostControl
+    NavBar,
+    "kb-header": Header
+    // "kb-dashboard": Dashboard,
+    // // GetAndPostContent,
+    // PostControl,
+    // PostQuery
   }
 };
 </script>

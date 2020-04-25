@@ -1,15 +1,18 @@
 <template>
   <div
-    class="gauge flex flex-col flex-grow text-white rounded-lg shadow p-6 mr-4 border border-white"
+    class="bg-blue-dark flex flex-col flex-grow text-white rounded-lg shadow p-6 mr-4 border border-white"
   >
-    <div class="font-thin uppercase leading-tight mb-3">
+    <div class="font-heavy uppercase text-blue-lightest leading-tight mb-3">
       <slot name="title"></slot>
     </div>
-    <div class="font-bold text-3xl leading-tight mb-3">
+    <div class="font-bold text-3xl mb-3">
       <slot name="data-1"></slot>
     </div>
-    <div class="text-lg mb-3">
+    <div class="mb-3">
       <slot name="data-2"></slot>
+    </div>
+    <div class>
+      <slot name="footer"></slot>
     </div>
   </div>
 </template>
