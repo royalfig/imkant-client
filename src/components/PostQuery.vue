@@ -18,20 +18,51 @@
                     class="py-1 px-2 flex-auto border-2 border-blue-lightest bg-blue-dark rounded-4"
                   />
                   <kb-button :onClick="scrape">Scrape</kb-button>
+                  <kb-button :onClick="clear">Clear</kb-button>
                 </div>
                 <label for="link" class="text-sm">Enter a URL</label>
               </div>
-              <div class="flex flex-col py-2">
-                <div v-if="post.img" class="mr-2 w-20 h-20 flex-shrink-0">
-                  <img :src="post.img" class="object-cover h-full w-full" />
-                </div>
-                <div v-if="dataPresent" class="flex flex-col">
-                  <div
-                    v-for="(item, idx) in post"
-                    :key="idx"
-                    class="flex items-center my-1"
-                  >
-                    <label
+              <div v-if="dataPresent" class="flex flex-col p-2 mt-4 ">
+                <div
+                  class="flex flex-col p-4 border rounded-sm border-transparent bg-gray-700 my-2 "
+                >
+                  <div class="media">
+                    <div class="media__left">
+                      <a :href="post.url">
+                        <figure class="media__img-container">
+                          <img
+                            class="media__img"
+                            :src="post.img"
+                            :alt="post.title"
+                          />
+                        </figure>
+                      </a>
+                    </div>
+                    <div class="media__right">
+                      <div class="media__content">
+                        <p>
+                          {{ post.author }} published
+                          <a :href="post.url">&ldquo;{{ post.title }}&rdquo;</a>
+                          on {{ post.date }} in
+                          <em>{{ post.journalTitle }}</em> {{ post.volume }}.{{
+                            post.issue
+                          }}: {{ post.firstpage }}-{{ post.lastpage }}.
+                          <a :href="post.url">{{ post.doi }}</a
+                          >.
+                        </p>
+                        <div v-if="post.keywords" class="flex">
+                          <kb-pill
+                            class="mr-2"
+                            v-for="keyword in post.keywords"
+                            :key="keyword"
+                            >{{ keyword }}</kb-pill
+                          >
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- <label
                       for="idx"
                       class="text-xs uppercase text-blue-lightest"
                       >{{ idx }}</label
@@ -40,21 +71,20 @@
                       :value="item"
                       :id="idx"
                       class="bg-transparent ml-2 w-full"
-                    />
-                  </div>
-                  <div
-                    v-if="notFound"
-                    class="border-4 border-yellow flex bg-yellow-lightest rounded-sm p-2 mt-6 text-black relative "
+                    /> -->
+                </div>
+                <div
+                  v-if="notFound"
+                  class="border-4 border-yellow flex bg-yellow-lightest rounded-sm p-2 mt-12 text-black relative "
+                >
+                  <p
+                    class="uppercase font-bold absolute label leading-tight px-1 rounded-sm border border-yellow bg-yellow-dark"
                   >
-                    <p
-                      class="uppercase font-bold absolute label leading-tight px-1 rounded-sm border border-yellow bg-yellow-dark"
-                    >
-                      Not Found
-                    </p>
-                    <p class="mr-2" v-for="(item, idx) in notFound" :key="idx">
-                      {{ item }}
-                    </p>
-                  </div>
+                    Not Found
+                  </p>
+                  <p class="mr-2" v-for="(item, idx) in notFound" :key="idx">
+                    {{ item }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -69,10 +99,12 @@
 import axios from "axios";
 import Gauge from "./Gauge";
 import Button from "./Button";
+import Pill from "./Pill";
 export default {
   components: {
     "kb-gauge": Gauge,
-    "kb-button": Button
+    "kb-button": Button,
+    "kb-pill": Pill
   },
   data() {
     return {
@@ -87,6 +119,7 @@ export default {
         firstpage: "",
         img: "",
         issue: "",
+        journalTitle: "",
         keywords: "",
         lastpage: "",
         title: "",
@@ -159,11 +192,11 @@ export default {
 
               notFound.push(item);
             });
-            console.log(value);
             const undefinedRemoved = value.filter(
               arrItem => arrItem !== undefined
             );
-            return undefinedRemoved.join();
+            console.log(undefinedRemoved[0]);
+            return undefinedRemoved[0];
           };
 
           this.post.abstract = metadataValidator(
@@ -208,8 +241,15 @@ export default {
             "openGraph",
             "general"
           );
+          this.post.journalTitle = metadataValidator(
+            ["journal_title", "source"],
+            "highwirePress",
+            "dublinCore",
+            "openGraph",
+            "general"
+          );
           this.post.keywords = metadataValidator(
-            ["subject"],
+            ["subject", "keywords"],
             "highwirePress",
             "dublinCore",
             "openGraph",
@@ -259,7 +299,7 @@ export default {
         });
     },
     extract: function(input) {
-      if (!input) {
+      if (!input || /\s+/.test(input)) {
         return "You gotta give me something to work with, Butthole 😛";
       }
       let extractedText;
@@ -280,6 +320,9 @@ export default {
         );
       }
       return "";
+    },
+    clear() {
+      this.link = "";
     }
   }
 };
@@ -289,5 +332,29 @@ export default {
 .label {
   top: -1rem;
   left: 1rem;
+}
+
+.media {
+  display: flex;
+}
+.media__left {
+  margin-right: 0.5rem;
+  min-width: 100px;
+}
+.media__right {
+  display: flex;
+  padding: 0.25rem 0;
+  flex-direction: column;
+  justify-content: center;
+  border-top: 1px solid white;
+  border-bottom: 1px solid white;
+}
+.media__img-container {
+  width: 100%;
+  height: 100%;
+}
+.media__img {
+  height: 100%;
+  width: 100%;
 }
 </style>
