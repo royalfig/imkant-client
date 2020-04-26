@@ -36,12 +36,16 @@
               <a
                 :href="post.url + 'edit'"
                 target="_blank"
-                class="post-container hover:text-yellow transition-colors ease-in-out duration-300"
+                class="flex items-center hover:text-yellow transition-colors ease-in-out duration-300"
               >
-                {{ idx + 10 * page + 1 }}. {{ post.title }}
-                <kb-pill>{{ post.primary_tag.name }}</kb-pill>
-                <kb-pill>{{ makeDateReadable(post.published_at) }}</kb-pill>
-                <kb-pill>{{ post.primary_author.name }}</kb-pill>
+                <p>{{ idx + 10 * page + 1 }}. {{ post.title }}</p>
+                <div class="flex space-x-2">
+                  <kb-pill class="ml-2">{{ post.primary_tag.name }}</kb-pill>
+                  <kb-pill class="ml-2">{{
+                    makeDateReadable(post.published_at)
+                  }}</kb-pill>
+                  <kb-pill class="ml-2">{{ post.primary_author.name }}</kb-pill>
+                </div>
               </a>
             </div>
           </template>

@@ -10,7 +10,11 @@ module.exports = {
           darkest: "#00071a"
         },
         yellow: {
-          default: "#F9F871"
+          lightest: "#fcfcba",
+          light: "#fbfaa2",
+          default: "#F9F871",
+          dark: "#f7f640",
+          darkest: "#f6f428"
         }
       }
     }

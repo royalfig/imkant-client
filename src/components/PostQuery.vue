@@ -25,7 +25,7 @@
                 <div v-if="post.img" class="mr-2 w-20 h-20 flex-shrink-0">
                   <img :src="post.img" class="object-cover h-full w-full" />
                 </div>
-                <div class="flex flex-col">
+                <div v-if="dataPresent" class="flex flex-col">
                   <div
                     v-for="(item, idx) in post"
                     :key="idx"
@@ -41,6 +41,19 @@
                       :id="idx"
                       class="bg-transparent ml-2 w-full"
                     />
+                  </div>
+                  <div
+                    v-if="notFound"
+                    class="border-4 border-yellow flex bg-yellow-lightest rounded-sm p-2 mt-6 text-black relative "
+                  >
+                    <p
+                      class="uppercase font-bold absolute label leading-tight px-1 rounded-sm border border-yellow bg-yellow-dark"
+                    >
+                      Not Found
+                    </p>
+                    <p class="mr-2" v-for="(item, idx) in notFound" :key="idx">
+                      {{ item }}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -64,6 +77,7 @@ export default {
   data() {
     return {
       link: "",
+      dataPresent: false,
       post: {
         abstract: "",
         author: "",
@@ -77,9 +91,9 @@ export default {
         lastpage: "",
         title: "",
         url: "",
-        volume: "",
-        notFound: []
-      }
+        volume: ""
+      },
+      notFound: [""]
     };
   },
   methods: {
@@ -92,96 +106,150 @@ export default {
         .get(`http://localhost:3000/scrape/${encodeURIComponent(validatedUrl)}`)
         .then(res => {
           console.log(res.data);
+          this.dataPresent = true;
           const notFound = [];
-          const metadataValidator = (prop, p1, p2, p3) => {
-            if (res.data[p1] && res.data[p1][prop]) {
-              prop = res.data[p1][prop];
-              return prop;
-            }
-            if (res.data[p2] && res.data[p2][prop]) {
-              prop = res.data[p2][prop];
-              return prop;
-            }
-            if (res.data[p3] && res.data[p3][prop]) {
-              prop = res.data[p3][prop];
-              return prop;
-            }
-            notFound.push(prop);
-            return "";
+          const metadataValidator = (prop, p1, p2, p3, p4, cb) => {
+            const value = prop.map(item => {
+              let definedValue = "";
+              if (res.data[p1] && res.data[p1][item]) {
+                item = res.data[p1][item];
+                if (cb) {
+                  item = cb(item);
+                  definedValue = item;
+                  return definedValue;
+                }
+
+                definedValue = item;
+                return definedValue;
+              }
+              if (res.data[p2] && res.data[p2][item]) {
+                item = res.data[p2][item];
+                if (cb) {
+                  item = cb(item);
+                  definedValue = item;
+                  return definedValue;
+                }
+
+                definedValue = item;
+                return definedValue;
+              }
+              if (res.data[p3] && res.data[p3][item]) {
+                item = res.data[p3][item];
+
+                if (cb) {
+                  item = cb(item);
+                  definedValue = item;
+                  return definedValue;
+                }
+
+                definedValue = item;
+                return definedValue;
+              }
+              if (res.data[p4] && res.data[p4][item]) {
+                item = res.data[p4][item];
+                if (cb) {
+                  item = cb(item);
+                  definedValue = item;
+                  return definedValue;
+                }
+
+                definedValue = item;
+                return definedValue;
+              }
+
+              notFound.push(item);
+            });
+            console.log(value);
+            const undefinedRemoved = value.filter(
+              arrItem => arrItem !== undefined
+            );
+            return undefinedRemoved.join();
           };
 
           this.post.abstract = metadataValidator(
-            "abstract",
+            ["abstract"],
             "highwirePress",
             "dublinCore",
-            "openGraph"
+            "openGraph",
+            "general"
           );
           this.post.author = metadataValidator(
-            "creator",
+            ["author", "creator"],
             "highwirePress",
             "dublinCore",
-            "openGraph"
+            "openGraph",
+            "general"
           );
           this.post.date = metadataValidator(
-            "date",
+            ["publication_date", "date"],
             "highwirePress",
             "dublinCore",
-            "openGraph"
+            "openGraph",
+            "general"
           );
           this.post.doi = metadataValidator(
-            "doi",
+            ["doi"],
             "highwirePress",
             "dublinCore",
-            "openGraph"
+            "openGraph",
+            "general"
           );
           this.post.firstpage = metadataValidator(
-            "firstpage",
+            ["firstpage"],
             "highwirePress",
             "dublinCore",
-            "openGraph"
+            "openGraph",
+            "general"
           );
           this.post.issue = metadataValidator(
-            "issue",
+            ["issue"],
             "highwirePress",
             "dublinCore",
-            "openGraph"
+            "openGraph",
+            "general"
           );
           this.post.keywords = metadataValidator(
-            "subject",
+            ["subject"],
             "highwirePress",
             "dublinCore",
-            "openGraph"
+            "openGraph",
+            "general"
           );
           this.post.lastpage = metadataValidator(
-            "lastpage",
+            ["lastpage"],
             "highwirePress",
             "dublinCore",
-            "openGraph"
+            "openGraph",
+            "general"
           );
           this.post.url = metadataValidator(
-            "url",
-            "highwirePress",
+            ["canonical", "url", "source"],
+            "general",
+            "openGraph",
             "dublinCore",
-            "openGraph"
+            "highwirePress"
           );
           this.post.volume = metadataValidator(
-            "volume",
+            ["volume"],
             "highwirePress",
             "dublinCore",
-            "openGraph"
+            "openGraph",
+            "general"
           );
 
           this.post.title = metadataValidator(
-            "title",
+            ["title"],
             "highwirePress",
+            "dublinCore",
             "openGraph",
             "general"
           );
           this.post.description = metadataValidator(
-            "description",
+            ["description"],
             "highwirePress",
             "openGraph",
-            "general"
+            "general",
+            "dublinCore"
           );
           this.post.img =
             res.data.openGraph && res.data.openGraph.image
@@ -204,7 +272,12 @@ export default {
         }
       }
       if (extractedText) {
-        return "So you wanna peep on " + extractedText + "? 😲";
+        return (
+          "So you wanna peep on " +
+          extractedText.charAt(0).toUpperCase() +
+          extractedText.slice(1) +
+          ", you Creeper? 😲"
+        );
       }
       return "";
     }
@@ -212,4 +285,9 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.label {
+  top: -1rem;
+  left: 1rem;
+}
+</style>
